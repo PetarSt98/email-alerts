@@ -19,6 +19,7 @@ namespace email_alerts.Controllers
             if (Request.Headers.ContainsKey("X-Forwarded-Preferred-Username"))
                 username = Request.Headers["X-Forwarded-Preferred-Username"].ToString();
             ViewData["Username"] = username;
+            Console.WriteLine(username);
             return View();
         }
 
