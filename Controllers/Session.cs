@@ -8,6 +8,7 @@ namespace email_alerts.Models
     public partial class Session
     {
         [Key]
+        [ForeignKey("EmailLog")]
         public Guid id { get; set; }
         [Required]
         public string UserName { get; set; }
@@ -15,7 +16,8 @@ namespace email_alerts.Models
         public DateTime Date { get; set; }
         [Required]
         public string Info { get; set; }
-        public virtual ICollection<Session> session { get; set; }
+
+        public virtual EmailLog emailLog { get; set; }
 
         public override string ToString()
         {
