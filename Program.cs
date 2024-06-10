@@ -1,7 +1,10 @@
+using email_alerts.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<EmailLogRepository>(); // Add this line
 
 var app = builder.Build();
 

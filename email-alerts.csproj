@@ -1,13 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>email_alerts</RootNamespace>
+    <UserSecretsId>3d7321b3-a0b5-4bc8-b522-04ffc6c31686</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     <PackageReference Include="UAParser" Version="3.1.47" />
   </ItemGroup>
 

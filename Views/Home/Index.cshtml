@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<email_alerts.Models.EmailLog>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -6,3 +8,34 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<h2>Email Logs</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>QueryID</th>
+            <th>Email</th>
+            <th>Date</th>
+            <th>PC Name</th>
+            <th>Info</th>
+            <th>Sent Status</th>
+            <th>SessionID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.ID</td>
+                <td>@log.QueryID</td>
+                <td>@log.EMail</td>
+                <td>@log.Date</td>
+                <td>@log.PCName</td>
+                <td>@log.Info</td>
+                <td>@log.SentStatus</td>
+                <td>@log.SessionID</td>
+            </tr>
+        }
+    </tbody>
+</table>
