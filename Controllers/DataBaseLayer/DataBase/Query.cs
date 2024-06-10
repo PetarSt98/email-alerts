@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
-namespace email_alerts.Models
+namespace email_alerts.DataBaseLayer.Data
 {
     [Table("Query")]
     public class Query

@@ -2,28 +2,34 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
-namespace email_alerts.Models
+namespace email_alerts.DataBaseLayer.Data
 {
-    [Table("Session")]
-    public partial class Session
+    [Table("QueryLog")]
+    public class QueryLog
     {
+        public QueryLog()
+        {
+            query = new HashSet<Query>();
+        }
+
         [Key]
-        [ForeignKey("EmailLog")]
-        public Guid id { get; set; }
+        public int id { get; set; }
         [Required]
-        public string UserName { get; set; }
+        [ForeignKey("EmailLog")]
+        public int QueryID { get; set; }
         [Required]
         public DateTime Date { get; set; }
         [Required]
         public string Info { get; set; }
+        public Guid? SessionID { get; set; }
 
+        public virtual ICollection<Query> query { get; set; }
         public virtual EmailLog emailLog { get; set; }
 
         public override string ToString()
         {
             return JsonSerializer.Serialize(this);
         }
-
 
     }
 }

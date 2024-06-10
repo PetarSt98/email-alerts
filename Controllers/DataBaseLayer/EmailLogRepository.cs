@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using email_alerts.Models;
+using email_alerts.DataBaseLayer.Data;
+
 
 namespace email_alerts.Data
 {
