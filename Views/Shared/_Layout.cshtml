@@ -7,9 +7,70 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/email_alerts.styles.css" asp-append-version="true" />
+    <style>
+        #cern-toolbar {
+            background-color: black;
+            padding: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #cern-toolbar a {
+            color: white;
+            text-decoration: none;
+        }
+        #cern-toolbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .cern-title {
+            display: flex;
+            align-items: center;
+        }
+        .cern-signedin {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .cern-accountlinks {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .cern-accountlinks a {
+            margin-left: 10px;
+        }
+        .cern-directory {
+            margin-left: 20px;
+        }
+    </style>
 </head>
 <body>
 <header>
+    <div id="cern-toolbar">
+        <div class="cern-title">
+            <h1>
+                <a href="http://cern.ch" title="CERN">
+                    <span class="cern-word">CERN</span>
+                    <span class="accelerating-science">Accelerating science</span>
+                </a>
+            </h1>
+        </div>
+        <ul class="cern-signedin">
+            <li id="ctl00_ctl00_ctl00_li_cern_accountlinks" class="cern-accountlinks">
+                <span id="ctl00_ctl00_ctl00_lblSignedInAs">
+                    <span>Signed in as: <a id="ctl00_ctl00_ctl00_hlSignInAs" title="Signed in as @ViewData["Username"]" class="account" href="https://account.cern.ch/account/CERNAccount/AccountStatus.aspx">@ViewData["Username"] (CERN)</a> </span>
+                </span>
+                <a id="ctl00_ctl00_ctl00_SignInStatus1_signoutLink" class="cern-account" href="/Account/Logout">Sign out</a>
+            </li>
+            <li>
+                <a class="cern-directory" href="http://cern.ch/directory" title="Search CERN resources and browse the directory">Directory</a>
+            </li>
+        </ul>
+    </div>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">email_alerts</a>
@@ -26,28 +87,25 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                 </ul>
-                <div class="navbar-nav">
-                    <span class="nav-item nav-link">Signed in as: <strong>@ViewData["Username"]</strong></span>
-                </div>
             </div>
         </div>
     </nav>
 </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - email_alerts - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2024 - email_alerts - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
