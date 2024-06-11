@@ -27,10 +27,9 @@ namespace email_alerts.Controllers
         private void SetUsername()
         {
             string username = HttpContext.Request.Headers["X-Forwarded-Preferred-Username"].ToString() ?? "Not signed in";
+
             if (Request.Headers.ContainsKey("X-Forwarded-Preferred-Username"))
-            {
                 username = Request.Headers["X-Forwarded-Preferred-Username"].ToString();
-            }
             ViewData["Username"] = username;
         }
 

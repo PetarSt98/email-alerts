@@ -29,12 +29,9 @@ namespace email_alerts.Data.Repositories
             _connectionString = connectionString
                 .Replace("{DB_USERNAME}", username)
                 .Replace("{DB_PASSWORD}", password);
-            Console.WriteLine(_connectionString);
             _connectionString = configuration.GetConnectionString("MSSQLConnection")
                 .Replace("{DB_USERNAME}", Environment.GetEnvironmentVariable("DB_USERNAME"))
                 .Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD")) + ";TrustServerCertificate=True";
-            Console.WriteLine(_connectionString);
-            Console.WriteLine(Environment.GetEnvironmentVariable("DB_USERNAME"));
 
 
             //_logger.LogInformation("Connection string successfully configured with user secrets.");
