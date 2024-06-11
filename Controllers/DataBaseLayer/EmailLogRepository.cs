@@ -4,13 +4,15 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using email_alerts.DataBaseLayer.Data;
-
+using Microsoft.EntityFrameworkCore;
+using email_alerts.DataBaseLayer;
 
 namespace email_alerts.Data
 {
     public class EmailLogRepository
     {
         private readonly string _connectionString;
+        private readonly EmailAlertsContext _context;
 
         public EmailLogRepository(IConfiguration configuration) // ILogger<EmailLogRepository> logger
         {
@@ -33,16 +35,24 @@ namespace email_alerts.Data
             Console.WriteLine(_connectionString);
             _connectionString = configuration.GetConnectionString("MSSQLConnection")
                 .Replace("{DB_USERNAME}", Environment.GetEnvironmentVariable("DB_USERNAME"))
-                .Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD"));
+                .Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD")) + ";TrustServerCertificate=True";
             Console.WriteLine(_connectionString);
             Console.WriteLine(Environment.GetEnvironmentVariable("DB_USERNAME"));
 
 
             //_logger.LogInformation("Connection string successfully configured with user secrets.");
+            var options = new DbContextOptionsBuilder<EmailAlertsContext>()
+                .UseSqlServer(_connectionString)
+                .Options;
+
+
+            _context = new EmailAlertsContext(options);
         }
 
         public IEnumerable<EmailLog> GetEmailLogs()
         {
+
+
             var emailLogs = new List<EmailLog>();
 
             using (var connection = new SqlConnection(_connectionString))

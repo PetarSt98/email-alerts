@@ -7,15 +7,10 @@ namespace email_alerts.DataBaseLayer.Data
     [Table("QueryLog")]
     public class QueryLog
     {
-        public QueryLog()
-        {
-            query = new HashSet<Query>();
-        }
-
         [Key]
         public int id { get; set; }
         [Required]
-        [ForeignKey("EmailLog")]
+        [ForeignKey("Query")]
         public int QueryID { get; set; }
         [Required]
         public DateTime Date { get; set; }
@@ -23,8 +18,9 @@ namespace email_alerts.DataBaseLayer.Data
         public string Info { get; set; }
         public Guid? SessionID { get; set; }
 
-        public virtual ICollection<Query> query { get; set; }
-        public virtual EmailLog emailLog { get; set; }
+        public virtual Query Query { get; set; }
+
+        public virtual Session Session { get; set; }
 
         public override string ToString()
         {

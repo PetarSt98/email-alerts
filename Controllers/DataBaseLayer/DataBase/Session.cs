@@ -8,7 +8,7 @@ namespace email_alerts.DataBaseLayer.Data
     public partial class Session
     {
         [Key]
-        [ForeignKey("EmailLog")]
+        //[ForeignKey("EmailLog")]
         public Guid id { get; set; }
         [Required]
         public string UserName { get; set; }
@@ -17,7 +17,7 @@ namespace email_alerts.DataBaseLayer.Data
         [Required]
         public string Info { get; set; }
 
-        public virtual EmailLog emailLog { get; set; }
+        public virtual ICollection<EmailLog> EmailLog { get; set; }
 
         public override string ToString()
         {
