@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using email_alerts.DataBaseLayer.Data;
+using email_alerts.Models.EmailAlerts;
 
-namespace email_alerts.DataBaseLayer
+
+namespace email_alerts.Data.Contexts
 {
     public class EmailAlertsContext : DbContext
     {

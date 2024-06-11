@@ -1,10 +1,9 @@
-﻿using email_alerts.Data;
+﻿using email_alerts.Data.Repositories;
 using email_alerts.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Linq;
+
 
 namespace email_alerts.Controllers
 {

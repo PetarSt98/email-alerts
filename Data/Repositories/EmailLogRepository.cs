@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using email_alerts.DataBaseLayer.Data;
+﻿using System.Data.SqlClient;
+using email_alerts.Models.EmailAlerts;
 using Microsoft.EntityFrameworkCore;
-using email_alerts.DataBaseLayer;
+using email_alerts.Data.Contexts;
 
-namespace email_alerts.Data
+
+namespace email_alerts.Data.Repositories
 {
     public class EmailLogRepository
     {
@@ -51,7 +48,26 @@ namespace email_alerts.Data
 
         public IEnumerable<EmailLog> GetEmailLogs()
         {
-
+            ///
+            try
+            {
+                var firstEmailLog = _context.EmailLogs
+                    .Include(e => e.Session)
+                    .Include(e => e.Query)
+                    .FirstOrDefault();
+                if (firstEmailLog != null)
+                {
+                    Console.WriteLine($"First EmailLog ID: {firstEmailLog.ID}");
+                    Console.WriteLine($"Email: {firstEmailLog.EMail}");
+                    Console.WriteLine($"Session UserName: {firstEmailLog.Session?.UserName}");
+                    Console.WriteLine($"Query Text: {firstEmailLog.Query?.Text}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            ///
 
             var emailLogs = new List<EmailLog>();
 

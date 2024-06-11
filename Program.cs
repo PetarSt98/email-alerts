@@ -1,4 +1,5 @@
 using email_alerts.Data;
+using email_alerts.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

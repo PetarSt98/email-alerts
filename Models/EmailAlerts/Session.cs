@@ -2,7 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
-namespace email_alerts.DataBaseLayer.Data
+
+namespace email_alerts.Models.EmailAlerts
 {
     [Table("Session")]
     public partial class Session
