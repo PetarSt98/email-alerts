@@ -21,6 +21,11 @@ namespace email_alerts.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             base.OnActionExecuting(context);
+            SetUsername();
+        }
+
+        private void SetUsername()
+        {
             string username = HttpContext.Request.Headers["X-Forwarded-Preferred-Username"].ToString() ?? "Not signed in";
             if (Request.Headers.ContainsKey("X-Forwarded-Preferred-Username"))
             {
@@ -31,18 +36,21 @@ namespace email_alerts.Controllers
 
         public IActionResult Index()
         {
+            SetUsername();
             var displayQueries = _emailLogRepository.GetAllQueriesToDisplay().ToList();
             return View(displayQueries);
         }
 
         public IActionResult Privacy()
         {
+            SetUsername();
             return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            SetUsername();
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
