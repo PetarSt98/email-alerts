@@ -91,5 +91,41 @@ namespace email_alerts.Data.Repositories
 
             return queries;
         }
+
+        public Query GetQueryById(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT * FROM dbo.Query WHERE id = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Query
+                            {
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
+                                Text = reader.GetString(reader.GetOrdinal("Text")),
+                                Description = reader.GetString(reader.GetOrdinal("Description")),
+                                Active = reader.GetBoolean(reader.GetOrdinal("Active")),
+                                Subject = reader.GetString(reader.GetOrdinal("Subject")),
+                                Body = reader.GetString(reader.GetOrdinal("Body")),
+                                Period = reader.IsDBNull(reader.GetOrdinal("Period")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Period")),
+                                LegacyMsg = reader.IsDBNull(reader.GetOrdinal("LegacyMsg")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("LegacyMsg")),
+                                Timeout = reader.IsDBNull(reader.GetOrdinal("Timeout")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Timeout")),
+                                TemplateID = reader.IsDBNull(reader.GetOrdinal("TemplateID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("TemplateID")),
+                                TemplateParameters = reader.GetString(reader.GetOrdinal("TemplateParameters")),
+                                QueryType = reader.IsDBNull(reader.GetOrdinal("QueryType")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("QueryType")),
+                                ReceiverType = reader.IsDBNull(reader.GetOrdinal("ReceiverType")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ReceiverType")),
+                                MessageFormat = reader.GetInt32(reader.GetOrdinal("MessageFormat"))
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

@@ -1,0 +1,66 @@
+﻿@model email_alerts.Models.EmailAlerts.Query
+
+@{
+    ViewData["Title"] = "Query Details";
+}
+
+<div class="container">
+    <h2>Query Details</h2>
+    <div class="form-group">
+        <label>ID</label>
+        <input type="text" class="form-control" value="@Model.id" readonly />
+    </div>
+    <div class="form-group">
+        <label>Text</label>
+        <textarea class="form-control" readonly>@Model.Text</textarea>
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" readonly>@Model.Description</textarea>
+    </div>
+    <div class="form-group">
+        <label>Active</label>
+        <input type="checkbox" class="form-check-input" @(Model.Active ? "checked" : "") disabled />
+    </div>
+    <div class="form-group">
+        <label>Subject</label>
+        <input type="text" class="form-control" value="@Model.Subject" readonly />
+    </div>
+    <div class="form-group">
+        <label>Body</label>
+        <textarea class="form-control" readonly>@Model.Body</textarea>
+    </div>
+    <div class="form-group">
+        <label>Period</label>
+        <input type="text" class="form-control" value="@Model.Period" readonly />
+    </div>
+    <div class="form-group">
+        <label>LegacyMsg</label>
+        <input type="text" class="form-control" value="@Model.LegacyMsg" readonly />
+    </div>
+    <div class="form-group">
+        <label>Timeout</label>
+        <input type="text" class="form-control" value="@Model.Timeout" readonly />
+    </div>
+    <div class="form-group">
+        <label>TemplateID</label>
+        <input type="text" class="form-control" value="@Model.TemplateID" readonly />
+    </div>
+    <div class="form-group">
+        <label>TemplateParameters</label>
+        <textarea class="form-control" readonly>@Model.TemplateParameters</textarea>
+    </div>
+    <div class="form-group">
+        <label>QueryType</label>
+        <input type="text" class="form-control" value="@Model.QueryType" readonly />
+    </div>
+    <div class="form-group">
+        <label>ReceiverType</label>
+        <input type="text" class="form-control" value="@Model.ReceiverType" readonly />
+    </div>
+    <div class="form-group">
+        <label>MessageFormat</label>
+        <input type="text" class="form-control" value="@Model.MessageFormat" readonly />
+    </div>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+</div>
