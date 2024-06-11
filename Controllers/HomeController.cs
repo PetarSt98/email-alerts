@@ -10,9 +10,9 @@ namespace email_alerts.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly EmailLogRepository _emailLogRepository;
+        private readonly EmailAlertRepository _emailLogRepository;
 
-        public HomeController(ILogger<HomeController> logger, EmailLogRepository emailLogRepository)
+        public HomeController(ILogger<HomeController> logger, EmailAlertRepository emailLogRepository)
         {
             _logger = logger;
             _emailLogRepository = emailLogRepository;
@@ -31,8 +31,8 @@ namespace email_alerts.Controllers
 
         public IActionResult Index()
         {
-            var emailLogs = _emailLogRepository.GetEmailLogs().ToList();
-            return View(emailLogs);
+            var displayQueries = _emailLogRepository.GetAllQueriesToDisplay().ToList();
+            return View(displayQueries);
         }
 
         public IActionResult Privacy()

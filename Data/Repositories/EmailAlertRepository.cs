@@ -6,12 +6,12 @@ using email_alerts.Data.Contexts;
 
 namespace email_alerts.Data.Repositories
 {
-    public class EmailLogRepository
+    public class EmailAlertRepository
     {
         private readonly string _connectionString;
         private readonly EmailAlertsContext _context;
 
-        public EmailLogRepository(IConfiguration configuration) // ILogger<EmailLogRepository> logger
+        public EmailAlertRepository(IConfiguration configuration) // ILogger<EmailLogRepository> logger
         {
             //_logger = logger;
 
@@ -46,7 +46,7 @@ namespace email_alerts.Data.Repositories
             _context = new EmailAlertsContext(options);
         }
 
-        public IEnumerable<EmailLog> GetEmailLogs()
+        public IEnumerable<Query> GetAllQueriesToDisplay()
         {
             ///
             try
@@ -69,35 +69,30 @@ namespace email_alerts.Data.Repositories
             }
             ///
 
-            var emailLogs = new List<EmailLog>();
+            var queries = new List<Query>();
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
-                using (var command = new SqlCommand("SELECT * FROM dbo.EmailLog", connection))
+                using (var command = new SqlCommand("SELECT * FROM dbo.Query", connection))
                 {
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            var emailLog = new EmailLog
+                            var query = new Query
                             {
-                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
-                                QueryID = reader.GetInt32(reader.GetOrdinal("QueryID")),
-                                EMail = reader.GetString(reader.GetOrdinal("EMail")),
-                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
-                                PCName = reader.GetString(reader.GetOrdinal("PCName")),
-                                Info = reader.IsDBNull(reader.GetOrdinal("Info")) ? null : reader.GetString(reader.GetOrdinal("Info")),
-                                SentStatus = reader.IsDBNull(reader.GetOrdinal("SentStatus")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SentStatus")),
-                                SessionID = reader.IsDBNull(reader.GetOrdinal("SessionID")) ? (Guid?)null : reader.GetGuid(reader.GetOrdinal("SessionID"))
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
+                                Description = reader.GetString(reader.GetOrdinal("Description")),
+                                Active = reader.GetBoolean(reader.GetOrdinal("Active")),
                             };
-                            emailLogs.Add(emailLog);
+                            queries.Add(query);
                         }
                     }
                 }
             }
 
-            return emailLogs;
+            return queries;
         }
     }
 }
