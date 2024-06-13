@@ -2,7 +2,42 @@
 
 @{
     ViewData["Title"] = Model.Description;
+
+    var messageFormatOptions = new Dictionary<int, string>
+    {
+        { 0, "HTML" },
+        { 1, "Plain text" }
+    };
+
+    var receiverTypeOptions = new Dictionary<int, string>
+    {
+        { 0, "Responsible" },
+        { 1, "Responsible & Main user" },
+        { 2, "Local admins" }
+    };
 }
+
+<style>
+    .select-arrow {
+        position: relative;
+    }
+
+    .select-arrow::after {
+        content: '▼';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .select-arrow select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        padding-right: 30px;
+    }
+</style>
 
 <div class="container">
     <h2>@Model.Description</h2>
@@ -22,7 +57,8 @@
         </div>
         <div class="form-group">
             <label>Active</label>
-            <input type="checkbox" class="form-check-input" name="Active" @(Model.Active ? "checked" : "") disabled />
+            @*<input type="hidden" name="Active" value="false" />*@
+            <input type="checkbox" class="form-check-input" name="Active" value="true" @(Model.Active ? "checked" : "") disabled />
         </div>
         <div class="form-group">
             <label>Alert SQL Text</label>
@@ -32,13 +68,45 @@
             <label>Mail Subject</label>
             <input type="text" class="form-control" name="Subject" value="@Model.Subject" readonly />
         </div>
-        <div class="form-group">
+        <div class="form-group select-arrow">
             <label>Receiver Type</label>
-            <input type="text" class="form-control" name="ReceiverType" value="@Model.ReceiverType" readonly />
+            <select class="form-control" name="ReceiverType" disabled>
+                @foreach (var option in receiverTypeOptions)
+                {
+                    if (Model.ReceiverType == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+                @if (!receiverTypeOptions.ContainsKey(Model.ReceiverType ?? -1))
+                {
+                    <option value="" selected>Unsupported type</option>
+                }
+            </select>
         </div>
-        <div class="form-group">
+        <div class="form-group select-arrow">
             <label>Message Format</label>
-            <input type="text" class="form-control" name="MessageFormat" value="@Model.MessageFormat" readonly />
+            <select class="form-control" name="MessageFormat" disabled>
+                @foreach (var option in messageFormatOptions)
+                {
+                    if (Model.MessageFormat == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+                @if (!messageFormatOptions.ContainsKey(Model.MessageFormat))
+                {
+                    <option value="" selected>Unsupported format</option>
+                }
+            </select>
         </div>
         <div class="form-group">
             <label>Mail body template</label>
@@ -58,6 +126,8 @@
         function enableEditing() {
             $('textarea, input[type="text"]').prop('readonly', false);
             $('input[type="checkbox"]').prop('disabled', false);
+            $('select[name="ReceiverType"]').prop('disabled', false);
+            $('select[name="MessageFormat"]').prop('disabled', false);
             $('#editButton').hide();
             $('#saveButton').show();
             $('#cancelButton').show();
@@ -66,6 +136,8 @@
         function cancelEditing() {
             $('textarea, input[type="text"]').prop('readonly', true);
             $('input[type="checkbox"]').prop('disabled', true);
+            $('select[name="ReceiverType"]').prop('disabled', true);
+            $('select[name="MessageFormat"]').prop('disabled', true);
             $('#editButton').show();
             $('#saveButton').hide();
             $('#cancelButton').hide();
