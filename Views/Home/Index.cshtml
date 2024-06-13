@@ -10,6 +10,7 @@
 </div>
 
 <h2>Email Alerts</h2>
+<button class="btn btn-primary" onclick="createNewAlert()">New Alert</button>
 <table class="table">
     <thead>
         <tr>
@@ -48,6 +49,10 @@
 
 @section Scripts {
     <script type="text/javascript">
+        function createNewAlert() {
+            window.location.href = '@Url.Action("NewAlert", "Home")';
+        }
+
         function alertsToBeSent(id) {
             window.location.href = '@Url.Action("AlertsToBeSent", "Home")/' + id;
         }

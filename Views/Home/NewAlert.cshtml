@@ -1,0 +1,75 @@
+﻿@model email_alerts.Models.EmailAlerts.Query
+
+@{
+    ViewData["Title"] = "New Alert";
+
+    var messageFormatOptions = new Dictionary<int, string>
+    {
+        { 0, "HTML" },
+        { 1, "Plain text" }
+    };
+
+    var receiverTypeOptions = new Dictionary<int, string>
+    {
+        { 0, "Responsible" },
+        { 1, "Responsible & Main user" },
+        { 2, "Local admins" }
+    };
+}
+
+<div class="container">
+    <h2>Create New Alert</h2>
+    <form method="post" action="@Url.Action("Create", "Home")">
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" rows="3" name="Description"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Timeout (seconds)</label>
+            <input type="text" class="form-control" name="Timeout" />
+        </div>
+        <div class="form-group">
+            <label>Notification Period (days)</label>
+            <input type="text" class="form-control" name="Period" />
+        </div>
+        <div class="form-group">
+            <label>Active</label>
+            <input type="hidden" name="Active" value="false" />
+            <input type="checkbox" class="form-check-input" name="Active" value="true" />
+        </div>
+        <div class="form-group">
+            <label>Alert SQL Text</label>
+            <textarea class="form-control" rows="5" name="Text"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Mail Subject</label>
+            <input type="text" class="form-control" name="Subject" />
+        </div>
+        <div class="form-group select-arrow">
+            <label>Receiver Type</label>
+            <select class="form-control" name="ReceiverType">
+                @foreach (var option in receiverTypeOptions)
+                {
+                    <option value="@option.Key">@option.Value</option>
+                }
+            </select>
+        </div>
+        <div class="form-group select-arrow">
+            <label>Message Format</label>
+            <select class="form-control" name="MessageFormat">
+                @foreach (var option in messageFormatOptions)
+                {
+                    <option value="@option.Key">@option.Value</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Mail body template</label>
+            <textarea class="form-control" rows="5" name="Body"></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-success">Save</button>
+            <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>

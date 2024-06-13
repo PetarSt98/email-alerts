@@ -128,28 +128,57 @@ namespace email_alerts.Data.Repositories
                     {
                         if (reader.Read())
                         {
-                            return new Query
+                            try
                             {
-                                id = reader.GetInt32(reader.GetOrdinal("id")),
-                                Text = reader.GetString(reader.GetOrdinal("Text")),
-                                Description = reader.GetString(reader.GetOrdinal("Description")),
-                                Active = reader.GetBoolean(reader.GetOrdinal("Active")),
-                                Subject = reader.GetString(reader.GetOrdinal("Subject")),
-                                Body = reader.GetString(reader.GetOrdinal("Body")),
-                                Period = reader.IsDBNull(reader.GetOrdinal("Period")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Period")),
-                                LegacyMsg = reader.IsDBNull(reader.GetOrdinal("LegacyMsg")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("LegacyMsg")),
-                                Timeout = reader.IsDBNull(reader.GetOrdinal("Timeout")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Timeout")),
-                                TemplateID = reader.IsDBNull(reader.GetOrdinal("TemplateID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("TemplateID")),
-                                TemplateParameters = reader.GetString(reader.GetOrdinal("TemplateParameters")),
-                                QueryType = reader.IsDBNull(reader.GetOrdinal("QueryType")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("QueryType")),
-                                ReceiverType = reader.IsDBNull(reader.GetOrdinal("ReceiverType")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ReceiverType")),
-                                MessageFormat = reader.GetInt32(reader.GetOrdinal("MessageFormat"))
-                            };
+                                return new Query
+                                {
+                                    id = reader.GetInt32(reader.GetOrdinal("id")),
+                                    Text = reader.GetString(reader.GetOrdinal("Text")),
+                                    Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
+                                    Active = reader.GetBoolean(reader.GetOrdinal("Active")),
+                                    Subject = reader.IsDBNull(reader.GetOrdinal("Subject")) ? null : reader.GetString(reader.GetOrdinal("Subject")),
+                                    Body = reader.GetString(reader.GetOrdinal("Body")),
+                                    Period = reader.IsDBNull(reader.GetOrdinal("Period")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Period")),
+                                    LegacyMsg = reader.IsDBNull(reader.GetOrdinal("LegacyMsg")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("LegacyMsg")),
+                                    Timeout = reader.IsDBNull(reader.GetOrdinal("Timeout")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("Timeout")),
+                                    TemplateID = reader.IsDBNull(reader.GetOrdinal("TemplateID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("TemplateID")),
+                                    TemplateParameters = reader.IsDBNull(reader.GetOrdinal("TemplateParameters")) ? null : reader.GetString(reader.GetOrdinal("TemplateParameters")),
+                                    QueryType = reader.IsDBNull(reader.GetOrdinal("QueryType")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("QueryType")),
+                                    ReceiverType = reader.IsDBNull(reader.GetOrdinal("ReceiverType")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("ReceiverType")),
+                                    MessageFormat = reader.GetInt32(reader.GetOrdinal("MessageFormat"))
+                                };
+                            }
+                            catch (Exception ex)
+                            {
+                                return null;
+                            }
                         }
                     }
                 }
             }
             return null;
+        }
+
+        public void AddQuery(Query query)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("INSERT INTO dbo.Query (Description, Timeout, Period, Active, Text, Subject, ReceiverType, MessageFormat, Body) VALUES (@Description, @Timeout, @Period, @Active, @Text, @Subject, @ReceiverType, @MessageFormat, @Body)", connection))
+                {
+                    command.Parameters.AddWithValue("@Description", query.Description);
+                    command.Parameters.AddWithValue("@Timeout", query.Timeout);
+                    command.Parameters.AddWithValue("@Period", query.Period);
+                    command.Parameters.AddWithValue("@Active", query.Active);
+                    command.Parameters.AddWithValue("@Text", query.Text);
+                    command.Parameters.AddWithValue("@Subject", query.Subject);
+                    command.Parameters.AddWithValue("@ReceiverType", query.ReceiverType);
+                    command.Parameters.AddWithValue("@MessageFormat", query.MessageFormat);
+                    command.Parameters.AddWithValue("@Body", query.Body);
+
+                    command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

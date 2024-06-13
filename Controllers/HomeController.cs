@@ -69,7 +69,6 @@ namespace email_alerts.Controllers
             return View(query);
         }
 
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -86,6 +85,23 @@ namespace email_alerts.Controllers
                 return RedirectToAction("Details", new { id = query.id });
             }
             return View("Details", query);
+        }
+
+        public IActionResult NewAlert()
+        {
+            SetUsername();
+            return View(new Query());
+        }
+
+        [HttpPost]
+        public IActionResult Create(Query query)
+        {
+            if (ModelState.IsValid)
+            {
+                _emailLogRepository.AddQuery(query);
+                return RedirectToAction("Index");
+            }
+            return View("NewAlert", query);
         }
     }
 }
