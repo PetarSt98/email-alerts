@@ -9,7 +9,7 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<h2>Query</h2>
+<h2>Email Alerts</h2>
 <table class="table">
     <thead>
         <tr>
@@ -28,12 +28,12 @@
             <tr>
                 <td>@log.id</td>
                 <td>
-                    <button class="btn btn-primary" onclick="sendAlert(@log.id)">Send Alert</button>
+                    <button class="btn btn-primary" onclick="alertsToBeSent(@log.id)">Alerts to be sent</button>
                 </td>
                 <td>@log.Description</td>
                 <td>@log.Active</td>
                 <td>
-                    <button class="btn btn-info" onclick="viewDetails(@log.id)">Details</button>
+                    <button class="btn btn-primary" onclick="viewDetails(@log.id)">Details</button>
                 </td>
                 <td>
                     <button class="btn btn-secondary" onclick="viewHistory(@log.id)">History</button>
@@ -48,9 +48,8 @@
 
 @section Scripts {
     <script type="text/javascript">
-        function sendAlert(id) {
-            // Placeholder for send alert functionality
-            alert("Send alert for ID: " + id);
+        function alertsToBeSent(id) {
+            window.location.href = '@Url.Action("AlertsToBeSent", "Home")/' + id;
         }
 
         function viewDetails(id) {

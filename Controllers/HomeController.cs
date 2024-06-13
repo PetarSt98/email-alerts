@@ -57,6 +57,17 @@ namespace email_alerts.Controllers
             return View(query);
         }
 
+        public IActionResult AlertsToBeSent(int id)
+        {
+            SetUsername();
+            var query = _emailLogRepository.GetQueryById(id);
+            if (query == null)
+            {
+                return NotFound();
+            }
+            return View(query);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
