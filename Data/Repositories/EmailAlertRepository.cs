@@ -92,6 +92,30 @@ namespace email_alerts.Data.Repositories
             return queries;
         }
 
+        public void UpdateQuery(Query query)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("UPDATE dbo.Query SET Description = @Description, Timeout = @Timeout, Period = @Period, Active = @Active, Text = @Text, Subject = @Subject, ReceiverType = @ReceiverType, MessageFormat = @MessageFormat, Body = @Body WHERE id = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@Description", query.Description);
+                    command.Parameters.AddWithValue("@Timeout", query.Timeout);
+                    command.Parameters.AddWithValue("@Period", query.Period);
+                    command.Parameters.AddWithValue("@Active", query.Active);
+                    command.Parameters.AddWithValue("@Text", query.Text);
+                    command.Parameters.AddWithValue("@Subject", query.Subject);
+                    command.Parameters.AddWithValue("@ReceiverType", query.ReceiverType);
+                    command.Parameters.AddWithValue("@MessageFormat", query.MessageFormat);
+                    command.Parameters.AddWithValue("@Body", query.Body);
+                    command.Parameters.AddWithValue("@id", query.id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         public Query GetQueryById(int id)
         {
             using (var connection = new SqlConnection(_connectionString))

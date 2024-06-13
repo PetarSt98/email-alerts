@@ -6,41 +6,71 @@
 
 <div class="container">
     <h2>@Model.Description</h2>
+    <form id="detailsForm" method="post" action="@Url.Action("Edit", "Home")">
+        <input type="hidden" name="id" value="@Model.id" />
         <div class="form-group">
-        <label>Description</label>
-        <textarea class="form-control" rows="3" readonly>@Model.Description</textarea>
-    </div>
-    <div class="form-group">
-        <label>Timeout (seconds)</label>
-        <input type="text" class="form-control" value="@Model.Timeout" readonly />
-    </div>
-    <div class="form-group">
-        <label>Notification Period (days)</label>
-        <input type="text" class="form-control" value="@Model.Period" readonly />
-    </div>
-    <div class="form-group">
-        <label>Active</label>
-        <input type="checkbox" class="form-check-input" @(Model.Active ? "checked" : "") disabled />
-    </div>
-    <div class="form-group">
-        <label>Alert SQL Text</label>
-        <textarea class="form-control" rows="5" readonly>@Model.Text</textarea>
-    </div>
-    <div class="form-group">
-        <label>Mail Subject</label>
-        <input type="text" class="form-control" value="@Model.Subject" readonly />
-    </div>
-    <div class="form-group">
-        <label>Receiver Fype</label>
-        <input type="text" class="form-control" value="@Model.ReceiverType" readonly />
-    </div>
-    <div class="form-group">
-        <label>Message Format</label>
-        <input type="text" class="form-control" value="@Model.MessageFormat" readonly />
-    </div>
-    <div class="form-group">
-        <label>Mail body template</label>
-        <textarea class="form-control" rows="5" readonly>@Model.Body</textarea>
-    </div>
-    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+            <label>Description</label>
+            <textarea class="form-control" rows="3" name="Description" readonly>@Model.Description</textarea>
+        </div>
+        <div class="form-group">
+            <label>Timeout (seconds)</label>
+            <input type="text" class="form-control" name="Timeout" value="@Model.Timeout" readonly />
+        </div>
+        <div class="form-group">
+            <label>Notification Period (days)</label>
+            <input type="text" class="form-control" name="Period" value="@Model.Period" readonly />
+        </div>
+        <div class="form-group">
+            <label>Active</label>
+            <input type="checkbox" class="form-check-input" name="Active" @(Model.Active ? "checked" : "") disabled />
+        </div>
+        <div class="form-group">
+            <label>Alert SQL Text</label>
+            <textarea class="form-control" rows="5" name="Text" readonly>@Model.Text</textarea>
+        </div>
+        <div class="form-group">
+            <label>Mail Subject</label>
+            <input type="text" class="form-control" name="Subject" value="@Model.Subject" readonly />
+        </div>
+        <div class="form-group">
+            <label>Receiver Type</label>
+            <input type="text" class="form-control" name="ReceiverType" value="@Model.ReceiverType" readonly />
+        </div>
+        <div class="form-group">
+            <label>Message Format</label>
+            <input type="text" class="form-control" name="MessageFormat" value="@Model.MessageFormat" readonly />
+        </div>
+        <div class="form-group">
+            <label>Mail body template</label>
+            <textarea class="form-control" rows="5" name="Body" readonly>@Model.Body</textarea>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" id="editButton" onclick="enableEditing()">Edit</button>
+            <button type="submit" class="btn btn-success" id="saveButton" style="display:none;">Save</button>
+            <button type="button" class="btn btn-secondary" id="cancelButton" style="display:none;" onclick="cancelEditing()">Cancel</button>
+            <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+        </div>
+    </form>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function enableEditing() {
+            $('textarea, input[type="text"]').prop('readonly', false);
+            $('input[type="checkbox"]').prop('disabled', false);
+            $('#editButton').hide();
+            $('#saveButton').show();
+            $('#cancelButton').show();
+        }
+
+        function cancelEditing() {
+            $('textarea, input[type="text"]').prop('readonly', true);
+            $('input[type="checkbox"]').prop('disabled', true);
+            $('#editButton').show();
+            $('#saveButton').hide();
+            $('#cancelButton').hide();
+            // Optionally, you can reload the page to reset the form
+            location.reload();
+        }
+    </script>
+}

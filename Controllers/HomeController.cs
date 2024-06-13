@@ -1,5 +1,6 @@
 ﻿using email_alerts.Data.Repositories;
 using email_alerts.Models;
+using email_alerts.Models.EmailAlerts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
@@ -74,6 +75,17 @@ namespace email_alerts.Controllers
         {
             SetUsername();
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Query query)
+        {
+            if (ModelState.IsValid)
+            {
+                _emailLogRepository.UpdateQuery(query);
+                return RedirectToAction("Details", new { id = query.id });
+            }
+            return View("Details", query);
         }
     }
 }
