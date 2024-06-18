@@ -26,7 +26,7 @@
     <tbody>
         @foreach (var log in Model)
         {
-            <tr>
+            <tr id="query-@log.id">
                 <td>@log.id</td>
                 <td>
                     <button class="btn btn-primary" onclick="alertsToBeSent(@log.id)">Alerts to be sent</button>
@@ -48,6 +48,7 @@
 </table>
 
 @section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         function createNewAlert() {
             window.location.href = '@Url.Action("NewAlert", "Home")';
@@ -66,10 +67,23 @@
         }
 
         function deleteQuery(id) {
-            // Placeholder for delete functionality
-            alert("Delete query with ID: " + id);
+            if (confirm('Are you sure you want to delete this query?')) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Delete", "Home")',
+                    data: { id: id },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#query-' + id).remove();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error deleting query.');
+                    }
+                });
+            }
         }
-
-
     </script>
 }

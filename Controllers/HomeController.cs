@@ -77,6 +77,19 @@ namespace email_alerts.Controllers
             return View(historyViewModel);
         }
 
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var query = _emailLogRepository.GetQueryById(id);
+            if (query == null)
+            {
+                return NotFound();
+            }
+
+            _emailLogRepository.DeleteQuery(id);
+            return Json(new { success = true });
+        }
+
         public IActionResult AlertsToBeSent(int id)
         {
             SetUsername();

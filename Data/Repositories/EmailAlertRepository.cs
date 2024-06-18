@@ -148,6 +148,18 @@ namespace email_alerts.Data.Repositories
             return emailLogs;
         }
 
+        public void DeleteQuery(int id)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("DELETE FROM dbo.Query WHERE id = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
 
         public Query GetQueryById(int id)
         {
