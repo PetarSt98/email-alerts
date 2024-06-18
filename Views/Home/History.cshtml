@@ -1,0 +1,39 @@
+﻿@model email_alerts.Models.HistoryViewModel
+
+@{
+    ViewData["Title"] = "History";
+}
+
+<h2>History for @Model.QueryDescription</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>PC Name</th>
+            <th>Sent Status</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model.EmailLogs)
+        {
+            <tr>
+                <td>@log.EMail</td>
+                <td>@log.PCName</td>
+                <td>@log.SentStatus</td>
+                <td>@log.Date</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<button class="btn btn-secondary" onclick="goBack()">Back</button>
+
+@section Scripts {
+    <script type="text/javascript">
+        function goBack() {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }
+    </script>
+}

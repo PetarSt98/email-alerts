@@ -62,13 +62,14 @@
         }
 
         function viewHistory(id) {
-            // Placeholder for view history functionality
-            alert("View history for ID: " + id);
+            window.location.href = '@Url.Action("History", "Home")/' + id;
         }
 
         function deleteQuery(id) {
             // Placeholder for delete functionality
             alert("Delete query with ID: " + id);
         }
+
+
     </script>
 }

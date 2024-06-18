@@ -34,8 +34,9 @@
         </div>
         <div class="form-group">
             <label>Active</label>
-            <input type="hidden" name="Active" value="false" />
-            <input type="checkbox" class="form-check-input" name="Active" value="true" />
+@*            <input type="hidden" name="Active" value="false" />
+            <input type="checkbox" class="form-check-input" name="Active" value="true" />*@
+            <input type="checkbox" class="form-check-input" name="Active" value="true" @(Model.Active ? "checked" : "") />
         </div>
         <div class="form-group">
             <label>Alert SQL Text</label>

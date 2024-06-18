@@ -58,6 +58,25 @@ namespace email_alerts.Controllers
             return View(query);
         }
 
+        public IActionResult History(int id)
+        {
+            SetUsername();
+            var query = _emailLogRepository.GetQueryById(id);
+            if (query == null)
+            {
+                return NotFound();
+            }
+
+            var emailLogs = _emailLogRepository.GetEmailLogsByQueryId(id).ToList();
+            var historyViewModel = new HistoryViewModel
+            {
+                QueryDescription = query.Description,
+                EmailLogs = emailLogs
+            };
+
+            return View(historyViewModel);
+        }
+
         public IActionResult AlertsToBeSent(int id)
         {
             SetUsername();
