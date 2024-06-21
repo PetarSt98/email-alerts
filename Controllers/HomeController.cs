@@ -41,7 +41,7 @@ namespace email_alerts.Controllers
         //    return View(displayQueries);
         //}
 
-        public IActionResult Index(int page = 1, int pageSize = 50)
+        public IActionResult Index(int page = 1, int pageSize = 30)
         {
             SetUsername();
             var totalQueries = _emailLogRepository.GetTotalQueriesCount();
@@ -74,7 +74,7 @@ namespace email_alerts.Controllers
             return View(query);
         }
 
-        public IActionResult History(int id, int page = 1, int pageSize = 50)
+        public IActionResult History(int id, int page = 1, int pageSize = 30)
         {
             SetUsername();
             var query = _emailLogRepository.GetQueryById(id);
@@ -94,7 +94,7 @@ namespace email_alerts.Controllers
                 PageSize = pageSize,
                 TotalEmailLogs = totalEmailLogs
             };
-
+            ViewBag.QueryId = id;
             return View(historyViewModel);
         }
 
@@ -112,7 +112,7 @@ namespace email_alerts.Controllers
             return Json(new { success = true });
         }
 
-        public IActionResult AlertsToBeSent(int id)
+        public IActionResult AlertsToBeSent(int id, int page = 1, int pageSize = 30)
         {
             SetUsername();
             var query = _emailLogRepository.GetQueryById(id);
@@ -120,8 +120,22 @@ namespace email_alerts.Controllers
             {
                 return NotFound();
             }
-            return View(query);
+
+            var totalEmailLogs = _emailLogRepository.GetTotalEmailLogsCountByStatus(id, 2);
+            var emailLogs = _emailLogRepository.GetEmailLogsByQueryIdAndStatus(id, 2, page, pageSize).ToList();
+
+            var alertsViewModel = new AlertsViewModel
+            {
+                QueryDescription = query.Description,
+                EmailLogs = emailLogs,
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalEmailLogs = totalEmailLogs
+            };
+            ViewBag.QueryId = id;
+            return View(alertsViewModel);
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -319,5 +319,57 @@ namespace email_alerts.Data.Repositories
                 }
             }
         }
+
+        public int GetTotalEmailLogsCountByStatus(int queryId, int status)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT COUNT(*) FROM dbo.EmailLog WHERE QueryID = @queryId AND SentStatus = @status", connection))
+                {
+                    command.Parameters.AddWithValue("@queryId", queryId);
+                    command.Parameters.AddWithValue("@status", status);
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
+
+        public IEnumerable<EmailLog> GetEmailLogsByQueryIdAndStatus(int queryId, int status, int page, int pageSize)
+        {
+            var emailLogs = new List<EmailLog>();
+            var offset = (page - 1) * pageSize;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT * FROM dbo.EmailLog WHERE QueryID = @queryId AND SentStatus = @status ORDER BY ID OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY", connection))
+                {
+                    command.Parameters.AddWithValue("@queryId", queryId);
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@Offset", offset);
+                    command.Parameters.AddWithValue("@PageSize", pageSize);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var emailLog = new EmailLog
+                            {
+                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                QueryID = reader.GetInt32(reader.GetOrdinal("QueryID")),
+                                EMail = reader.GetString(reader.GetOrdinal("EMail")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
+                                PCName = reader.IsDBNull(reader.GetOrdinal("PCName")) ? null : reader.GetString(reader.GetOrdinal("PCName")),
+                                SentStatus = reader.IsDBNull(reader.GetOrdinal("SentStatus")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SentStatus")),
+                                SessionID = reader.IsDBNull(reader.GetOrdinal("SessionID")) ? (Guid?)null : reader.GetGuid(reader.GetOrdinal("SessionID"))
+                            };
+                            emailLogs.Add(emailLog);
+                        }
+                    }
+                }
+            }
+
+            return emailLogs;
+        }
+
     }
 }
