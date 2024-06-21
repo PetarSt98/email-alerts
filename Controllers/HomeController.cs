@@ -34,12 +34,28 @@ namespace email_alerts.Controllers
             ViewData["Username"] = username;
         }
 
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    SetUsername();
+        //    var displayQueries = _emailLogRepository.GetAllQueriesToDisplay().ToList();
+        //    return View(displayQueries);
+        //}
+
+        public IActionResult Index(int page = 1, int pageSize = 50)
         {
             SetUsername();
-            var displayQueries = _emailLogRepository.GetAllQueriesToDisplay().ToList();
-            return View(displayQueries);
+            var totalQueries = _emailLogRepository.GetTotalQueriesCount();
+            var displayQueries = _emailLogRepository.GetQueriesToDisplay(page, pageSize).ToList();
+            var viewModel = new QueryIndexViewModel
+            {
+                Queries = displayQueries,
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalQueries = totalQueries
+            };
+            return View(viewModel);
         }
+
 
         public IActionResult Privacy()
         {
@@ -58,7 +74,7 @@ namespace email_alerts.Controllers
             return View(query);
         }
 
-        public IActionResult History(int id)
+        public IActionResult History(int id, int page = 1, int pageSize = 50)
         {
             SetUsername();
             var query = _emailLogRepository.GetQueryById(id);
@@ -67,15 +83,21 @@ namespace email_alerts.Controllers
                 return NotFound();
             }
 
-            var emailLogs = _emailLogRepository.GetEmailLogsByQueryId(id).ToList();
+            var totalEmailLogs = _emailLogRepository.GetTotalEmailLogsCount(id);
+            var emailLogs = _emailLogRepository.GetEmailLogsByQueryId(id, page, pageSize).ToList();
+
             var historyViewModel = new HistoryViewModel
             {
                 QueryDescription = query.Description,
-                EmailLogs = emailLogs
+                EmailLogs = emailLogs,
+                PageNumber = page,
+                PageSize = pageSize,
+                TotalEmailLogs = totalEmailLogs
             };
 
             return View(historyViewModel);
         }
+
 
         [HttpPost]
         public IActionResult Delete(int id)

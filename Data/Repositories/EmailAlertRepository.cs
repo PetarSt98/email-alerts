@@ -204,6 +204,100 @@ namespace email_alerts.Data.Repositories
             return null;
         }
 
+        public int GetTotalEmailLogsCount(int queryId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT COUNT(*) FROM dbo.EmailLog WHERE QueryID = @queryId", connection))
+                {
+                    command.Parameters.AddWithValue("@queryId", queryId);
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
+
+        public IEnumerable<EmailLog> GetEmailLogsByQueryId(int queryId, int page, int pageSize)
+        {
+            var emailLogs = new List<EmailLog>();
+            var offset = (page - 1) * pageSize;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT * FROM dbo.EmailLog WHERE QueryID = @queryId ORDER BY ID OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY", connection))
+                {
+                    command.Parameters.AddWithValue("@queryId", queryId);
+                    command.Parameters.AddWithValue("@Offset", offset);
+                    command.Parameters.AddWithValue("@PageSize", pageSize);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var emailLog = new EmailLog
+                            {
+                                ID = reader.GetInt32(reader.GetOrdinal("ID")),
+                                QueryID = reader.GetInt32(reader.GetOrdinal("QueryID")),
+                                EMail = reader.GetString(reader.GetOrdinal("EMail")),
+                                Date = reader.GetDateTime(reader.GetOrdinal("Date")),
+                                PCName = reader.IsDBNull(reader.GetOrdinal("PCName")) ? null : reader.GetString(reader.GetOrdinal("PCName")),
+                                SentStatus = reader.IsDBNull(reader.GetOrdinal("SentStatus")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SentStatus")),
+                                SessionID = reader.IsDBNull(reader.GetOrdinal("SessionID")) ? (Guid?)null : reader.GetGuid(reader.GetOrdinal("SessionID"))
+                            };
+                            emailLogs.Add(emailLog);
+                        }
+                    }
+                }
+            }
+
+            return emailLogs;
+        }
+
+
+        public int GetTotalQueriesCount()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT COUNT(*) FROM dbo.Query", connection))
+                {
+                    return (int)command.ExecuteScalar();
+                }
+            }
+        }
+
+        public IEnumerable<Query> GetQueriesToDisplay(int page, int pageSize)
+        {
+            var queries = new List<Query>();
+            var offset = (page - 1) * pageSize;
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand("SELECT * FROM dbo.Query ORDER BY id OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY", connection))
+                {
+                    command.Parameters.AddWithValue("@Offset", offset);
+                    command.Parameters.AddWithValue("@PageSize", pageSize);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var query = new Query
+                            {
+                                id = reader.GetInt32(reader.GetOrdinal("id")),
+                                Description = reader.GetString(reader.GetOrdinal("Description")),
+                                Active = reader.GetBoolean(reader.GetOrdinal("Active")),
+                            };
+                            queries.Add(query);
+                        }
+                    }
+                }
+            }
+
+            return queries;
+        }
+
+
         public void AddQuery(Query query)
         {
             using (var connection = new SqlConnection(_connectionString))

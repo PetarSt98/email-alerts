@@ -1,7 +1,8 @@
-﻿@model IEnumerable<email_alerts.Models.EmailAlerts.Query>
+﻿@model email_alerts.Models.QueryIndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
+    int totalPages = (int)Math.Ceiling((double)Model.TotalQueries / Model.PageSize);
 }
 
 <div class="text-center">
@@ -24,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var log in Model)
+        @foreach (var log in Model.Queries)
         {
             <tr id="query-@log.id">
                 <td>@log.id</td>
@@ -46,6 +47,23 @@
         }
     </tbody>
 </table>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber - 1, pageSize = Model.PageSize })">Previous</a>
+        </li>
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = Model.PageSize })">@i</a>
+            </li>
+        }
+        <li class="page-item @(Model.PageNumber == totalPages ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action("Index", new { page = Model.PageNumber + 1, pageSize = Model.PageSize })">Next</a>
+        </li>
+    </ul>
+</nav>
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
