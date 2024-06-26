@@ -70,7 +70,20 @@
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-secondary" onclick="runQuery()">Execute Query</button>
             <a class="btn btn-secondary" asp-action="Index">Back to List</a>
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        function runQuery() {
+            var queryText = $('textarea[name="Text"]').val();
+            var form = $('<form method="post" action="@Url.Action("RunQuery", "Home")"></form>');
+            form.append($('<input type="hidden" name="queryText" />').val(queryText));
+            $('body').append(form);
+            form.submit();
+        }
+    </script>
+}
