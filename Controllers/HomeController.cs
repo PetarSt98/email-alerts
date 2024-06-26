@@ -180,7 +180,7 @@ namespace email_alerts.Controllers
 
             var results = _emailLogRepository.ExecuteQuery(queryText);
 
-            return View("QueryResults", results);
+            return PartialView("_QueryResultsPartial", results);
         }
     }
 }

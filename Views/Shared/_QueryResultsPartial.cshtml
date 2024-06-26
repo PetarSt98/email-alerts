@@ -1,14 +1,9 @@
 ﻿@model List<Dictionary<string, object>>
 
-@{
-    ViewData["Title"] = "Query Results";
-}
-
-<h2>Executed Query Results</h2>
-
 @if (Model != null && Model.Any())
 {
-    <table class="table">
+    <div class="table-responsive">
+        <table class="table table-bordered">
         <thead>
             <tr>
                 @foreach (var key in Model.First().Keys)
@@ -29,10 +24,9 @@
             }
         </tbody>
     </table>
+    </div>
 }
 else
 {
-    <p>Querry run was successful. Output is empty.</p>
+    <p>Query run was successful. Output is empty.</p>
 }
-
-<a class="btn btn-secondary" asp-action="Index">Back</a>

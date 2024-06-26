@@ -122,7 +122,28 @@
     </form>
 </div>
 
+<div class="modal fade" id="queryResultsModal" tabindex="-1" role="dialog" aria-labelledby="queryResultsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="queryResultsModalLabel">Query Results</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="queryResultsBody">
+                <!-- Query results will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
         function enableEditing() {
             $('textarea, input[type="text"]').prop('readonly', false);
@@ -148,10 +169,24 @@
 
         function runQuery() {
             var queryText = $('textarea[name="Text"]').val();
-            var form = $('<form method="post" action="@Url.Action("RunQuery", "Home")"></form>');
-            form.append($('<input type="hidden" name="queryText" />').val(queryText));
-            $('body').append(form);
-            form.submit();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RunQuery", "Home")',
+                data: { queryText: queryText },
+                success: function (response) {
+                    $('#queryResultsBody').html(response);
+                    $('#queryResultsModal').modal('show');
+                },
+                error: function () {
+                    alert('Error executing query.');
+                }
+            });
         }
+
+        $(document).ready(function() {
+            $('#queryResultsModal').on('hidden.bs.modal', function () {
+                $('#queryResultsBody').html(''); // Clear the modal content on close
+            });
+        });
     </script>
 }
