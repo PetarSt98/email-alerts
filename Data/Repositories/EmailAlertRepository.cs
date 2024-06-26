@@ -9,6 +9,7 @@ namespace email_alerts.Data.Repositories
     public class EmailAlertRepository
     {
         private readonly string _connectionString;
+        private readonly string _executeQuertconnectionString;
         private readonly EmailAlertsContext _context;
 
         public EmailAlertRepository(IConfiguration configuration) // ILogger<EmailLogRepository> logger
@@ -16,8 +17,16 @@ namespace email_alerts.Data.Repositories
             //_logger = logger;
 
             var connectionString = configuration.GetConnectionString("MSSQLConnection");
+            var executeQueryConnectionString = configuration.GetConnectionString("ExecutionMSSQLConnection");
+
             var username = configuration["DB_USERNAME"];
             var password = configuration["DB_PASSWORD"];
+            var executeUsername = configuration["EXECUTE_DB_USERNAME"];
+            var executePassword = configuration["EXECUTE_DB_PASSWORD"];
+            var serverName = configuration["DB_SERVER"];
+            var databaseName = configuration["DB_NAME"];
+            var executeServerName = configuration["EXECUTE_DB_SERVER"];
+            var executeDatabaseName = configuration["EXECUTE_DB_NAME"];
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
@@ -27,11 +36,26 @@ namespace email_alerts.Data.Repositories
 
             
             _connectionString = connectionString
+                .Replace("{DB_SERVER}", serverName)
+                .Replace("{DB_NAME}", databaseName)
                 .Replace("{DB_USERNAME}", username)
                 .Replace("{DB_PASSWORD}", password);
             _connectionString = configuration.GetConnectionString("MSSQLConnection")
+                .Replace("{DB_SERVER}", Environment.GetEnvironmentVariable("DB_SERVER"))
+                .Replace("{DB_NAME}", Environment.GetEnvironmentVariable("DB_NAME"))
                 .Replace("{DB_USERNAME}", Environment.GetEnvironmentVariable("DB_USERNAME"))
                 .Replace("{DB_PASSWORD}", Environment.GetEnvironmentVariable("DB_PASSWORD")) + ";TrustServerCertificate=True";
+
+            _executeQuertconnectionString = executeQueryConnectionString
+                .Replace("{EXECUTE_DB_SERVER}", executeServerName)
+                .Replace("{EXECUTE_DB_NAME}", executeDatabaseName)
+                .Replace("{EXECUTE_DB_USERNAME}", executeUsername)
+                .Replace("{EXECUTE_DB_PASSWORD}", executePassword);
+            _executeQuertconnectionString = configuration.GetConnectionString("ExecutionMSSQLConnection")
+                .Replace("{EXECUTE_DB_SERVER}", Environment.GetEnvironmentVariable("EXECUTE_DB_SERVER"))
+                .Replace("{EXECUTE_DB_NAME}", Environment.GetEnvironmentVariable("EXECUTE_DB_NAME"))
+                .Replace("{EXECUTE_DB_USERNAME}", Environment.GetEnvironmentVariable("EXECUTE_DB_USERNAME"))
+                .Replace("{EXECUTE_DB_PASSWORD}", Environment.GetEnvironmentVariable("EXECUTE_DB_PASSWORD")) + ";TrustServerCertificate=True";
 
 
             //_logger.LogInformation("Connection string successfully configured with user secrets.");
@@ -302,7 +326,7 @@ namespace email_alerts.Data.Repositories
             var results = new List<Dictionary<string, object>>();
             try
             {
-                using (var connection = new SqlConnection(_connectionString))
+                using (var connection = new SqlConnection(_executeQuertconnectionString))
                 {
                     connection.Open();
                     using (var command = new SqlCommand(queryText, connection))
