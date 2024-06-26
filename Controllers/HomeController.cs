@@ -171,5 +171,16 @@ namespace email_alerts.Controllers
             }
             return View("NewAlert", query);
         }
+
+
+        [HttpPost]
+        public IActionResult RunQuery(string queryText)
+        {
+            SetUsername();
+
+            var results = _emailLogRepository.ExecuteQuery(queryText);
+
+            return View("QueryResults", results);
+        }
     }
 }

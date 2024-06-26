@@ -116,6 +116,7 @@
             <button type="button" class="btn btn-primary" id="editButton" onclick="enableEditing()">Edit</button>
             <button type="submit" class="btn btn-success" id="saveButton" style="display:none;">Save</button>
             <button type="button" class="btn btn-secondary" id="cancelButton" style="display:none;" onclick="cancelEditing()">Cancel</button>
+            <button type="button" class="btn btn-secondary" onclick="runQuery()">Execute Query</button>
             <a class="btn btn-secondary" asp-action="Index">Back to List</a>
         </div>
     </form>
@@ -143,6 +144,14 @@
             $('#cancelButton').hide();
             // Optionally, you can reload the page to reset the form
             location.reload();
+        }
+
+        function runQuery() {
+            var queryText = $('textarea[name="Text"]').val();
+            var form = $('<form method="post" action="@Url.Action("RunQuery", "Home")"></form>');
+            form.append($('<input type="hidden" name="queryText" />').val(queryText));
+            $('body').append(form);
+            form.submit();
         }
     </script>
 }

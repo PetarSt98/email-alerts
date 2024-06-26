@@ -297,6 +297,39 @@ namespace email_alerts.Data.Repositories
             return queries;
         }
 
+        public List<Dictionary<string, object>> ExecuteQuery(string queryText)
+        {
+            var results = new List<Dictionary<string, object>>();
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(queryText, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    row[reader.GetName(i)] = reader.GetValue(i);
+                                }
+                                results.Add(row);
+                            }
+                        }
+                    }
+                }
+            } catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                results.Clear();
+                results.Add(new Dictionary<string, object> { {"Error", ex.Message } });
+            }
+
+            return results;
+        }
 
         public void AddQuery(Query query)
         {

@@ -1,0 +1,38 @@
+﻿@model List<Dictionary<string, object>>
+
+@{
+    ViewData["Title"] = "Query Results";
+}
+
+<h2>Query Results</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (var key in Model.First().Keys)
+                {
+                    <th>@key</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Model)
+            {
+                <tr>
+                    @foreach (var cell in row.Values)
+                    {
+                        <td>@cell</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results found.</p>
+}
+
+<a class="btn btn-secondary" asp-action="Index">Back to List</a>
