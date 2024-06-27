@@ -121,20 +121,20 @@ namespace email_alerts.Controllers
                 return NotFound();
             }
 
-            var totalEmailLogs = _emailLogRepository.GetTotalEmailLogsCountByStatus(id, 2);
-            var emailLogs = _emailLogRepository.GetEmailLogsByQueryIdAndStatus(id, 2, page, pageSize).ToList();
+            var results = _emailLogRepository.AlertsToBeSentTemp(id, query.Text);
 
             var alertsViewModel = new AlertsViewModel
             {
                 QueryDescription = query.Description,
-                EmailLogs = emailLogs,
+                EmailLogs = results,
                 PageNumber = page,
                 PageSize = pageSize,
-                TotalEmailLogs = totalEmailLogs
+                TotalEmailLogs = results.Count()
             };
             ViewBag.QueryId = id;
             return View(alertsViewModel);
         }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -179,6 +179,16 @@ namespace email_alerts.Controllers
             SetUsername();
 
             var results = _emailLogRepository.ExecuteQuery(queryText);
+
+            return PartialView("_QueryResultsPartial", results);
+        }
+
+        [HttpPost]
+        public IActionResult RunAlertsToBeSentQuery(int queryId, string queryText)
+        {
+            SetUsername();
+
+            var results = _emailLogRepository.AlertsToBeSentTemp(queryId, queryText);
 
             return PartialView("_QueryResultsPartial", results);
         }

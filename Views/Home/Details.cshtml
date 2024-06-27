@@ -117,6 +117,7 @@
             <button type="submit" class="btn btn-success" id="saveButton" style="display:none;">Save</button>
             <button type="button" class="btn btn-secondary" id="cancelButton" style="display:none;" onclick="cancelEditing()">Cancel</button>
             <button type="button" class="btn btn-secondary" onclick="runQuery()">Execute Query</button>
+            <button type="button" class="btn btn-secondary" onclick="alertsToBeSent(@Model.id)">Alerts about to be sent</button>
             <a class="btn btn-secondary" asp-action="Index">Back to List</a>
         </div>
     </form>
@@ -173,6 +174,22 @@
                 type: "POST",
                 url: '@Url.Action("RunQuery", "Home")',
                 data: { queryText: queryText },
+                success: function (response) {
+                    $('#queryResultsBody').html(response);
+                    $('#queryResultsModal').modal('show');
+                },
+                error: function () {
+                    alert('Error executing query.');
+                }
+            });
+        }
+
+        function alertsToBeSent(id) {
+            var queryText = $('textarea[name="Text"]').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RunAlertsToBeSentQuery", "Home")',
+                data: { queryId: id, queryText: queryText },
                 success: function (response) {
                     $('#queryResultsBody').html(response);
                     $('#queryResultsModal').modal('show');

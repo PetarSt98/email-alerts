@@ -7,27 +7,36 @@
 
 <h2>Alerts to be sent for @Model.QueryDescription</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>PC Name</th>
-            <th>Sent Status</th>
-            <th>Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var log in Model.EmailLogs)
-        {
-            <tr>
-                <td>@log.EMail</td>
-                <td>@log.PCName</td>
-                <td>@log.SentStatus</td>
-                <td>@log.Date</td>
-            </tr>
-        }
-    </tbody>
-</table>
+@if (Model.EmailLogs != null && Model.EmailLogs.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    @foreach (var key in Model.EmailLogs.First().Keys)
+                    {
+                        <th>@key</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.EmailLogs)
+                {
+                    <tr>
+                        @foreach (var cell in row.Values)
+                        {
+                            <td>@cell</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p>Query run was successful. Output is empty.</p>
+}
 
 <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">

@@ -429,5 +429,83 @@ namespace email_alerts.Data.Repositories
             return emailLogs;
         }
 
+        public List<Dictionary<string, object>> AlertsToBeSentTemp(int queryId, string queryText)
+        {
+            string sqlQuery = @"
+                use cmf;
+                DROP TABLE IF EXISTS #mytemp;
+
+                --- Query goes here
+                " + queryText + @"
+
+                Go
+
+                with EmailAlertQuery AS (
+                    select *
+                    from #mytemp
+                ),
+                CMFResponsibleAndMainUser AS (
+                    select q.PCName, pc.MainUser + '@cern.ch' as ContactEmail
+                    from EmailAlertQuery q
+                    join CMF.dbo.REP_PC_Status pc
+                    ON pc.PCName = q.PCName
+                    union 
+                    select q.PCName, pc.RespUser + '@cern.ch'
+                    from EmailAlertQuery q
+                    join CMF.dbo.REP_PC_Status pc
+                    ON pc.PCName = q.PCName
+                ), 
+                ToBeSent AS (
+                    select l.*
+                    from CMFResponsibleAndMainUser pc
+                    join email_alerts.dbo.EmailLog l
+                    ON pc.PCName = l.PCName
+                    AND l.Email = pc.ContactEmail
+                    join email_alerts.dbo.query q
+                    on q.id = l.QueryID
+                    where --pc.Contactemail = 'sifirooz@cern.ch'
+                     queryid = " + queryId + @"
+                    and [date] >= dateadd(day, -q.Period, getdate())
+                )
+
+                select PCName, ContactEmail
+                from CMFResponsibleAndMainUser
+                where pcname not in (select PCName from ToBeSent)-- where PCName like '%intune%'
+                --and ContactEmail = 'it-ce-vmsrvadmins@cern.ch'
+                order by pcname";
+
+            var results = new List<Dictionary<string, object>>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_executeQuertconnectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(sqlQuery, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var row = new Dictionary<string, object>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    row[reader.GetName(i)] = reader.GetValue(i);
+                                }
+                                results.Add(row);
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                results.Clear();
+                results.Add(new Dictionary<string, object> { { "Error", ex.Message } });
+            }
+
+            return results;
+        }
+
     }
 }
