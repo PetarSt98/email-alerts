@@ -3,6 +3,14 @@
 @{
     ViewData["Title"] = "History";
     int totalPages = (int)Math.Ceiling((double)Model.TotalEmailLogs / Model.PageSize);
+
+    var statusType = new Dictionary<int, string>
+    {
+        { 0, "Successful" },
+        { 1, "Error" },
+        { 2, "Test" },
+        { 3, "Test" }
+    };
 }
 
 <h2>History for @Model.QueryDescription</h2>
@@ -22,7 +30,7 @@
             <tr>
                 <td>@log.EMail</td>
                 <td>@log.PCName</td>
-                <td>@log.SentStatus</td>
+                <td>@statusType[log.SentStatus ?? 1]</td>
                 <td>@log.Date</td>
             </tr>
         }

@@ -370,6 +370,7 @@ namespace email_alerts.Data.Repositories
                     command.Parameters.AddWithValue("@Subject", query.Subject);
                     command.Parameters.AddWithValue("@ReceiverType", query.ReceiverType);
                     command.Parameters.AddWithValue("@MessageFormat", query.MessageFormat);
+                    command.Parameters.AddWithValue("@QueryType", 0);
                     command.Parameters.AddWithValue("@Body", query.Body);
 
                     command.ExecuteNonQuery();
